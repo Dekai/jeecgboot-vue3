@@ -21,7 +21,8 @@ import {
 
 // TODO 如果想换成SVG渲染，就导出SVGRenderer，
 //  并且放到 echarts.use 里，注释掉 CanvasRenderer
-import { /*SVGRenderer*/ CanvasRenderer } from 'echarts/renderers';
+// import { CanvasRenderer } from 'echarts/renderers';
+import { SVGRenderer } from 'echarts/renderers';
 
 echarts.use([
   LegendComponent,
@@ -37,7 +38,8 @@ echarts.use([
   MapChart,
   RadarChart,
   // TODO 因为要兼容Online图表自适应打印，所以改成 CanvasRenderer，可能会模糊
-  CanvasRenderer,
+  // CanvasRenderer,
+  SVGRenderer,
   PictorialBarChart,
   RadarComponent,
   ToolboxComponent,

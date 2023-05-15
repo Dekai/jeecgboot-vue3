@@ -2,6 +2,7 @@ import {BasicColumn} from '/@/components/Table';
 import {FormSchema} from '/@/components/Table';
 import { rules} from '/@/utils/helper/validator';
 import { render } from '/@/utils/common/renderUtils';
+import {JVxeTypes,JVxeColumn} from '/@/components/jeecg/JVxeTable/types'
 //列表数据
 export const columns: BasicColumn[] = [
    {
@@ -44,7 +45,7 @@ export const columns: BasicColumn[] = [
 export const searchFormSchema: FormSchema[] = [
 	{
       label: "创建日期",
-      field: 'createTime',
+      field: "createTime",
       component: 'DatePicker',
       componentProps: {
          showTime:true,
@@ -54,13 +55,13 @@ export const searchFormSchema: FormSchema[] = [
  	},
 	{
       label: "负债名称",
-      field: 'name',
+      field: "name",
       component: 'Input',
       colProps: {span: 6},
  	},
 	{
       label: "家庭成员",
-      field: 'memeber',
+      field: "memeber",
       component: 'JDictSelectTag',
       componentProps:{
           dictCode:"family_member"
@@ -69,7 +70,7 @@ export const searchFormSchema: FormSchema[] = [
  	},
 	{
       label: "负债类别",
-      field: 'loanType',
+      field: "loanType",
       component: 'JDictSelectTag',
       componentProps:{
           dictCode:"loan_type"
@@ -78,7 +79,7 @@ export const searchFormSchema: FormSchema[] = [
  	},
 	{
       label: "币种",
-      field: 'currencyCode',
+      field: "currencyCode",
       component: 'JDictSelectTag',
       componentProps:{
           dictCode:"currency_code"
@@ -87,13 +88,13 @@ export const searchFormSchema: FormSchema[] = [
  	},
 	{
       label: "金额",
-      field: 'amount',
+      field: "amount",
       component: 'Input',
       colProps: {span: 6},
  	},
 	{
       label: "负债期限",
-      field: 'loanTerm',
+      field: "loanTerm",
       component: 'Input',
       colProps: {span: 6},
  	},
@@ -182,7 +183,36 @@ export const formSchema: FormSchema[] = [
 	  show: false
 	},
 ];
-
+//子表单数据
+//子表表格配置
+export const loanChangeColumns: JVxeColumn[] = [
+    {
+      title: '变动类别',
+      key: 'changeType',
+      type: JVxeTypes.select,
+      options:[],
+      dictCode:"change_type",
+      width:"200px",
+      placeholder: '请输入${title}',
+      defaultValue:'',
+    },
+    {
+      title: '金额',
+      key: 'amount',
+      type: JVxeTypes.inputNumber,
+      width:"200px",
+      placeholder: '请输入${title}',
+      defaultValue:'',
+    },
+    {
+      title: '备注',
+      key: 'note',
+      type: JVxeTypes.input,
+      width:"200px",
+      placeholder: '请输入${title}',
+      defaultValue:'',
+    },
+  ]
 
 
 /**
@@ -190,6 +220,6 @@ export const formSchema: FormSchema[] = [
 * @param param
 */
 export function getBpmFormSchema(_formData): FormSchema[]{
-  // 默认和原始表单保持一致 如果流程中配置了权限数据，这里需要单独处理formSchema
+// 默认和原始表单保持一致 如果流程中配置了权限数据，这里需要单独处理formSchema
   return formSchema;
 }
