@@ -38,7 +38,7 @@
   import { defineComponent, ref, computed, unref, toRaw, inject, watchEffect } from 'vue';
   import { Table } from 'ant-design-vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
-  import { PageWrapperFixedHeightKey } from '/@/components/Page';
+  import { PageWrapperFixedHeightKey } from '/@/components/Page/injectionKey';
   import expandIcon from './components/ExpandIcon';
   import HeaderCell from './components/HeaderCell.vue';
   import { InnerHandlers } from './types/table';
@@ -348,6 +348,14 @@
     .ant-tag {
       margin-right: 0;
     }
+
+    //update-begin-author:liusq---date:20230517--for: [issues/526]RangePicker 设置预设范围按钮样式问题---
+    .ant-picker-preset {
+      .ant-tag {
+        margin-right: 8px !important;
+      }
+    }
+    //update-end-author:liusq---date:20230517--for: [issues/526]RangePicker 设置预设范围按钮样式问题---
 
     .ant-table-wrapper {
       padding: 6px;
