@@ -1,5 +1,5 @@
 <template>
-  <Card title="花销分类" :loading="loading">
+  <Card title="收入来源" :loading="loading">
     <div ref="chartRef" :style="{width, height}"></div>
   </Card>
 </template>
@@ -8,7 +8,7 @@
 import {Card} from 'ant-design-vue';
 import {Ref, ref} from "vue";
 import {useECharts} from "/@/hooks/web/useECharts";
-import {listExpenseCategories} from "/@/views/rr/dashboard/dashboard.api";
+import {listAssetCategories} from "/@/views/rr/dashboard/dashboard.api";
 import {ChartCategoryItem} from "/@/views/rr/dashboard/type";
 import {onMountedOrActivated} from "/@/hooks/core/onMountedOrActivated";
 
@@ -27,64 +27,49 @@ defineProps({
 const chartRef = ref<HTMLDataElement | null>(null);
 const loading = ref<Boolean>(false);
 const {setOptions} = useECharts(chartRef as Ref<HTMLDataElement>);
-const totalVolume = ref<number>(0);
 
 const initChart = (data: ChartCategoryItem[]) => {
   console.log("Chart Data = " + JSON.stringify(data));
   setOptions({
     tooltip: {
-      trigger: 'item'
-    },
-    legend: {
-      bottom: '1%',
-      left: 'center',
-      // doesn't perfectly work with our tricks, disable it
-      selectedMode: false
+      trigger: 'item',
     },
     series: [
       {
-        name: '花销分类',
+        color: ['#5ab1ef', '#b6a2de', '#67e0e3', '#2ec7c9'],
+        name: '收入来源',
         type: 'pie',
-        radius: ['40%', '70%'],
-        center: ['50%', '45%'],
-        itemStyle: {
-          borderRadius: 10,
-          borderColor: '#fff',
-          borderWidth: 2,
-        },
-        startAngle: 180,
-        label: {
-          show: true,
-          formatter(param) {
-            // correct the percentage
-            return param.name + ' (' + param.percent + '%)';
-          }
-        },
+        radius: '80%',
+        center: ['50%', '50%'],
+        roseType: 'radius',
+        animationType: 'scale',
+        animationEasing: 'exponentialInOut',
         data: [
-          ...data,
-
-        ]
-      }
-    ]
+          { value: 500, name: '电子产品' },
+          { value: 310, name: '服装' },
+          { value: 274, name: '化妆品' },
+          { value: 400, name: '家居' },
+        ].sort(function (a, b) {
+          return a.value - b.value;
+        }),
+        animationDelay: function () {
+          return Math.random() * 400;
+        },
+      },
+    ],
   });
-}
-
-const buildChartData = (responseData: ChartCategoryItem[]) => {
-  totalVolume.value = responseData.reduce((sum, item) => sum + item.value, 0);
 }
 
 onMountedOrActivated(() => {
   const parameters = {type: '3m'};
   console.log("Loading =" + loading);
   loading.value = true;
-  listExpenseCategories(parameters).then((res) => {
+  listAssetCategories(parameters).then((res) => {
     loading.value = false;
     if (res) {
-      buildChartData(res);
-      console.log("chart data " + res);
       initChart(res);
     } else {
-      console.error('listExpenseCategories error: : ', res);
+      console.error('listAssetCategories error: : ', res);
     }
   });
 });

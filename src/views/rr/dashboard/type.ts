@@ -1,4 +1,4 @@
-export interface ExpenseCategoryItem {
+export interface ChartCategoryItem {
   name: string;
   value: number;
 }
