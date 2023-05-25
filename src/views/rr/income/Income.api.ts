@@ -4,14 +4,14 @@ import { useMessage } from "/@/hooks/web/useMessage";
 const { createConfirm } = useMessage();
 
 enum Api {
-  list = '/rr.asset/asset/list',
-  save='/rr.asset/asset/add',
-  edit='/rr.asset/asset/edit',
-  deleteOne = '/rr.asset/asset/delete',
-  deleteBatch = '/rr.asset/asset/deleteBatch',
-  importExcel = '/rr.asset/asset/importExcel',
-  exportXls = '/rr.asset/asset/exportXls',
-  rrAssetChangeList = '/rr.asset/asset/queryRrAssetChangeByMainId',
+  list = '/rr.income/income/list',
+  save='/rr.income/income/add',
+  edit='/rr.income/income/edit',
+  deleteOne = '/rr.income/income/delete',
+  deleteBatch = '/rr.income/income/deleteBatch',
+  importExcel = '/rr.income/income/importExcel',
+  exportXls = '/rr.income/income/exportXls',
+  incomeChangeList = '/rr.income/income/queryIncomeChangeByMainId',
 }
 /**
  * 导出api
@@ -27,7 +27,7 @@ export const getImportUrl = Api.importExcel;
  * 查询子表数据
  * @param params
  */
-export const rrAssetChangeList = Api.rrAssetChangeList;
+export const incomeChangeList = Api.incomeChangeList;
 /**
  * 列表接口
  * @param params

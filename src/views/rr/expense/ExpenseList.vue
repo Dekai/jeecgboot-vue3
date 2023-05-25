@@ -39,18 +39,18 @@
       </template>
     </BasicTable>
     <!-- 表单区域 -->
-    <LoanModal @register="registerModal" @success="handleSuccess"></LoanModal>
+    <ExpenseModal @register="registerModal" @success="handleSuccess"></ExpenseModal>
   </div>
 </template>
 
-<script lang="ts" name="rr.loan-loan" setup>
+<script lang="ts" name="rr.expense-expense" setup>
   import {ref, computed, unref} from 'vue';
   import {BasicTable, useTable, TableAction} from '/@/components/Table';
   import { useListPage } from '/@/hooks/system/useListPage'
   import {useModal} from '/@/components/Modal';
-  import LoanModal from './components/LoanModal.vue'
-  import {columns, searchFormSchema} from './Loan.data';
-  import {list, deleteOne, batchDelete, getImportUrl,getExportUrl} from './Loan.api';
+  import ExpenseModal from './components/ExpenseModal.vue'
+  import {columns, searchFormSchema} from './Expense.data';
+  import {list, deleteOne, batchDelete, getImportUrl,getExportUrl} from './Expense.api';
   import {downloadFile} from '/@/utils/common/renderUtils';
   const checkedKeys = ref<Array<string | number>>([]);
   //注册model
@@ -58,7 +58,7 @@
    //注册table数据
   const { prefixCls,tableContext,onExportXls,onImportXls } = useListPage({
       tableProps:{
-           title: '负债表',
+           title: '支出表',
            api: list,
            columns,
            canResize:false,
@@ -78,7 +78,7 @@
            },
         },
         exportConfig: {
-            name:"负债表",
+            name:"支出表",
             url: getExportUrl,
         },
         importConfig: {

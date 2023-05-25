@@ -11,16 +11,23 @@ enum Api {
   deleteBatch = '/rr.loan/loan/deleteBatch',
   importExcel = '/rr.loan/loan/importExcel',
   exportXls = '/rr.loan/loan/exportXls',
+  rrLoanChangeList = '/rr.loan/loan/queryRrLoanChangeByMainId',
 }
 /**
  * 导出api
  * @param params
  */
 export const getExportUrl = Api.exportXls;
+
 /**
  * 导入api
  */
 export const getImportUrl = Api.importExcel;
+/**
+ * 查询子表数据
+ * @param params
+ */
+export const rrLoanChangeList = Api.rrLoanChangeList;
 /**
  * 列表接口
  * @param params

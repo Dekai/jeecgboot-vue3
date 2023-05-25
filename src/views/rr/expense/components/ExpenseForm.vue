@@ -3,15 +3,15 @@
     <BasicForm @register="registerForm" ref="formRef"/>
     <!-- 子表单区域 -->
     <a-tabs v-model:activeKey="activeKey" animated  @change="handleChangeTabs">
-          <a-tab-pane tab="借贷变动记录表" key="rrLoanChange" :forceRender="true">
+          <a-tab-pane tab="支出变动记录表" key="expenseChange" :forceRender="true">
             <JVxeTable
               keep-source
               resizable
-              ref="rrLoanChange"
-              v-if="rrLoanChangeTable.show"
-              :loading="rrLoanChangeTable.loading"
-              :columns="rrLoanChangeTable.columns"
-              :dataSource="rrLoanChangeTable.dataSource"
+              ref="expenseChange"
+              v-if="expenseChangeTable.show"
+              :loading="expenseChangeTable.loading"
+              :columns="expenseChangeTable.columns"
+              :dataSource="expenseChangeTable.dataSource"
               :height="340"
               :rowNumber="true"
               :rowSelection="true"
@@ -35,11 +35,11 @@
   import { propTypes } from '/@/utils/propTypes';
   import { useJvxeMethod } from '/@/hooks/system/useJvxeMethods';
   import { VALIDATE_FAILED } from '/@/utils/common/vxeUtils';
-  import {getBpmFormSchema,rrLoanChangeColumns} from '../Loan.data';
-  import {saveOrUpdate,rrLoanChangeList} from '../Loan.api';
+  import {getBpmFormSchema,expenseChangeColumns} from '../Expense.data';
+  import {saveOrUpdate,expenseChangeList} from '../Expense.api';
 
   export default defineComponent({
-    name: "LoanForm",
+    name: "ExpenseForm",
     components:{
       BasicForm,
     },
@@ -62,14 +62,14 @@
         return true;
       });
 
-      const refKeys = ref(['rrLoanChange', ]);
-      const activeKey = ref('rrLoanChange');
-      const rrLoanChange = ref();
-      const tableRefs = {rrLoanChange, };
-      const rrLoanChangeTable = reactive({
+      const refKeys = ref(['expenseChange', ]);
+      const activeKey = ref('expenseChange');
+      const expenseChange = ref();
+      const tableRefs = {expenseChange, };
+      const expenseChangeTable = reactive({
         loading: false,
         dataSource: [],
-        columns:rrLoanChangeColumns,
+        columns:expenseChangeColumns,
         show: false
       })
 
@@ -79,7 +79,7 @@
         let main = Object.assign({}, allValues.formValue)
         return {
           ...main, // 展开
-          rrLoanChangeList: allValues.tablesValue[0].tableData,
+          expenseChangeList: allValues.tablesValue[0].tableData,
         }
       }
 
@@ -88,14 +88,14 @@
         await saveOrUpdate(values, true);
       }
 
-      const queryByIdUrl = '/rr.loan/loan/queryById';
+      const queryByIdUrl = '/rr.expense/expense/queryById';
       async function initFormData(){
         let params = {id: props.formData.dataId};
         const data = await defHttp.get({url: queryByIdUrl, params});
         //设置表单的值
         await setFieldsValue({...data});
-        requestSubTableData(rrLoanChangeList, {id: data.id}, rrLoanChangeTable, ()=>{
-          rrLoanChangeTable.show = true;
+        requestSubTableData(expenseChangeList, {id: data.id}, expenseChangeTable, ()=>{
+          expenseChangeTable.show = true;
         });
         //默认是禁用
         await setProps({disabled: formDisabled.value})
@@ -110,8 +110,8 @@
         handleSubmit,
         activeKey,
         handleChangeTabs,
-        rrLoanChange,
-        rrLoanChangeTable,
+        expenseChange,
+        expenseChangeTable,
       }
     }
   });

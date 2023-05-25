@@ -8,7 +8,7 @@
 import {Card} from 'ant-design-vue';
 import {Ref, ref} from "vue";
 import {useECharts} from "/@/hooks/web/useECharts";
-import {listAssetCategories} from "/@/views/rr/dashboard/dashboard.api";
+import {listIncomeCategories} from "/@/views/rr/dashboard/dashboard.api";
 import {ChartCategoryItem} from "/@/views/rr/dashboard/type";
 import {onMountedOrActivated} from "/@/hooks/core/onMountedOrActivated";
 
@@ -27,49 +27,76 @@ defineProps({
 const chartRef = ref<HTMLDataElement | null>(null);
 const loading = ref<Boolean>(false);
 const {setOptions} = useECharts(chartRef as Ref<HTMLDataElement>);
-
+const totalValue = ref<number>(0);
 const initChart = (data: ChartCategoryItem[]) => {
   console.log("Chart Data = " + JSON.stringify(data));
   setOptions({
     tooltip: {
-      trigger: 'item',
+      trigger: 'item'
+    },
+    legend: {
+      bottom: '1%',
+      left: 'center',
+      // doesn't perfectly work with our tricks, disable it
+      selectedMode: false
     },
     series: [
       {
-        color: ['#5ab1ef', '#b6a2de', '#67e0e3', '#2ec7c9'],
         name: '收入来源',
         type: 'pie',
-        radius: '80%',
-        center: ['50%', '50%'],
-        roseType: 'radius',
-        animationType: 'scale',
-        animationEasing: 'exponentialInOut',
-        data: [
-          { value: 500, name: '电子产品' },
-          { value: 310, name: '服装' },
-          { value: 274, name: '化妆品' },
-          { value: 400, name: '家居' },
-        ].sort(function (a, b) {
-          return a.value - b.value;
-        }),
-        animationDelay: function () {
-          return Math.random() * 400;
+        radius: ['40%', '70%'],
+        center: ['50%', '70%'],
+        // adjust the start angle
+        startAngle: 180,
+        itemStyle: {
+          borderRadius: 10,
+          borderColor: '#fff',
+          borderWidth: 2,
         },
+        label: {
+          show: true,
+          formatter(param) {
+            // correct the percentage
+            return param.name + ' (' + param.percent * 2 + '%)';
+          }
+        },
+        data: [
+          ...data,
+          {
+            // make an record to fill the bottom 50%
+            value: totalValue,
+            itemStyle: {
+              // stop the chart from rendering this piece
+              color: 'none',
+              decal: {
+                symbol: 'none'
+              }
+            },
+            label: {
+              show: false
+            }
+          }
+        ]
       },
-    ],
+    ]
   });
+}
+
+const buildChartData = (responseData: ChartCategoryItem[]) => {
+  totalValue.value = responseData.reduce((sum, item) => sum + item.value, 0);
 }
 
 onMountedOrActivated(() => {
   const parameters = {type: '3m'};
   console.log("Loading =" + loading);
   loading.value = true;
-  listAssetCategories(parameters).then((res) => {
+  listIncomeCategories(parameters).then((res) => {
     loading.value = false;
     if (res) {
+      buildChartData(res);
       initChart(res);
     } else {
-      console.error('listAssetCategories error: : ', res);
+      console.error('listIncomeCategories error: : ', res);
     }
   });
 });

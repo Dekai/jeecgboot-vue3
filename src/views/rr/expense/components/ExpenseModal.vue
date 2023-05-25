@@ -3,14 +3,14 @@
       <BasicForm @register="registerForm" ref="formRef"/>
   <!-- 子表单区域 -->
     <a-tabs v-model:activeKey="activeKey" animated @change="handleChangeTabs">
-      <a-tab-pane tab="资产变动记录表" key="rrAssetChange" :forceRender="true">
+      <a-tab-pane tab="支出变动记录表" key="expenseChange" :forceRender="true">
         <JVxeTable
           keep-source
           resizable
-          ref="rrAssetChange"
-          :loading="rrAssetChangeTable.loading"
-          :columns="rrAssetChangeTable.columns"
-          :dataSource="rrAssetChangeTable.dataSource"
+          ref="expenseChange"
+          :loading="expenseChangeTable.loading"
+          :columns="expenseChangeTable.columns"
+          :dataSource="expenseChangeTable.dataSource"
           :height="340"
           :rowNumber="true"
           :rowSelection="true"
@@ -28,21 +28,21 @@
     import {BasicForm, useForm} from '/@/components/Form/index';
     import { JVxeTable } from '/@/components/jeecg/JVxeTable'
     import { useJvxeMethod } from '/@/hooks/system/useJvxeMethods.ts'
-    import {formSchema,rrAssetChangeColumns} from '../Asset.data';
-    import {saveOrUpdate,rrAssetChangeList} from '../Asset.api';
+    import {formSchema,expenseChangeColumns} from '../Expense.data';
+    import {saveOrUpdate,expenseChangeList} from '../Expense.api';
     import { VALIDATE_FAILED } from '/@/utils/common/vxeUtils'
     // Emits声明
     const emit = defineEmits(['register','success']);
     const isUpdate = ref(true);
     const formDisabled = ref(false);
-    const refKeys = ref(['rrAssetChange', ]);
-    const activeKey = ref('rrAssetChange');
-    const rrAssetChange = ref();
-    const tableRefs = {rrAssetChange, };
-    const rrAssetChangeTable = reactive({
+    const refKeys = ref(['expenseChange', ]);
+    const activeKey = ref('expenseChange');
+    const expenseChange = ref();
+    const tableRefs = {expenseChange, };
+    const expenseChangeTable = reactive({
           loading: false,
           dataSource: [],
-          columns:rrAssetChangeColumns
+          columns:expenseChangeColumns
     })
     //表单配置
     const [registerForm, {setProps,resetFields, setFieldsValue, validate}] = useForm({
@@ -63,7 +63,7 @@
             await setFieldsValue({
                 ...data.record,
             });
-             requestSubTableData(rrAssetChangeList, {id:data?.record?.id}, rrAssetChangeTable)
+             requestSubTableData(expenseChangeList, {id:data?.record?.id}, expenseChangeTable)
         }
         // 隐藏底部时禁用整个表单
        setProps({ disabled: !data?.showFooter })
@@ -76,14 +76,14 @@
 
     async function reset(){
       await resetFields();
-      activeKey.value = 'rrAssetChange';
-      rrAssetChangeTable.dataSource = [];
+      activeKey.value = 'expenseChange';
+      expenseChangeTable.dataSource = [];
     }
     function classifyIntoFormData(allValues) {
          let main = Object.assign({}, allValues.formValue)
          return {
            ...main, // 展开
-           rrAssetChangeList: allValues.tablesValue[0].tableData,
+           expenseChangeList: allValues.tablesValue[0].tableData,
          }
        }
     //表单提交事件

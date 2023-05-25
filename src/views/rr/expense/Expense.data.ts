@@ -6,19 +6,19 @@ import {JVxeTypes,JVxeColumn} from '/@/components/jeecg/JVxeTable/types'
 //列表数据
 export const columns: BasicColumn[] = [
    {
-    title: '负债名称',
+    title: '支出名称',
     align:"center",
     dataIndex: 'name'
    },
    {
     title: '家庭成员',
     align:"center",
-    dataIndex: 'memeber_dictText'
+    dataIndex: 'member_dictText'
    },
    {
-    title: '负债类别',
+    title: '支出类别',
     align:"center",
-    dataIndex: 'loanType_dictText'
+    dataIndex: 'expenseType_dictText'
    },
    {
     title: '币种',
@@ -29,11 +29,6 @@ export const columns: BasicColumn[] = [
     title: '金额',
     align:"center",
     dataIndex: 'amount'
-   },
-   {
-    title: '负债期限',
-    align:"center",
-    dataIndex: 'loanTerm'
    },
    {
     title: '描述',
@@ -54,14 +49,14 @@ export const searchFormSchema: FormSchema[] = [
       colProps: {span: 6},
  	},
 	{
-      label: "负债名称",
+      label: "支出名称",
       field: "name",
       component: 'Input',
       colProps: {span: 6},
  	},
 	{
       label: "家庭成员",
-      field: "memeber",
+      field: "member",
       component: 'JDictSelectTag',
       componentProps:{
           dictCode:"family_member"
@@ -69,11 +64,11 @@ export const searchFormSchema: FormSchema[] = [
       colProps: {span: 6},
  	},
 	{
-      label: "负债类别",
-      field: "loanType",
+      label: "支出类别",
+      field: "expenseType",
       component: 'JDictSelectTag',
       componentProps:{
-          dictCode:"loan_type"
+          dictCode:"expense_type"
       },
       colProps: {span: 6},
  	},
@@ -92,28 +87,22 @@ export const searchFormSchema: FormSchema[] = [
       component: 'Input',
       colProps: {span: 6},
  	},
-	{
-      label: "负债期限",
-      field: "loanTerm",
-      component: 'Input',
-      colProps: {span: 6},
- 	},
 ];
 //表单数据
 export const formSchema: FormSchema[] = [
   {
-    label: '负债名称',
+    label: '支出名称',
     field: 'name',
     component: 'Input',
     dynamicRules: ({model,schema}) => {
           return [
-                 { required: true, message: '请输入负债名称!'},
+                 { required: true, message: '请输入支出名称!'},
           ];
      },
   },
   {
     label: '家庭成员',
-    field: 'memeber',
+    field: 'member',
     component: 'JDictSelectTag',
     componentProps:{
         dictCode:"family_member"
@@ -125,15 +114,15 @@ export const formSchema: FormSchema[] = [
      },
   },
   {
-    label: '负债类别',
-    field: 'loanType',
+    label: '支出类别',
+    field: 'expenseType',
     component: 'JDictSelectTag',
     componentProps:{
-        dictCode:"loan_type"
+        dictCode:"expense_type"
      },
     dynamicRules: ({model,schema}) => {
           return [
-                 { required: true, message: '请输入负债类别!'},
+                 { required: true, message: '请输入支出类别!'},
           ];
      },
   },
@@ -161,16 +150,6 @@ export const formSchema: FormSchema[] = [
      },
   },
   {
-    label: '负债期限',
-    field: 'loanTerm',
-    component: 'InputNumber',
-    dynamicRules: ({model,schema}) => {
-          return [
-                 { required: true, message: '请输入负债期限!'},
-          ];
-     },
-  },
-  {
     label: '描述',
     field: 'description',
     component: 'InputTextArea',
@@ -185,7 +164,7 @@ export const formSchema: FormSchema[] = [
 ];
 //子表单数据
 //子表表格配置
-export const rrLoanChangeColumns: JVxeColumn[] = [
+export const expenseChangeColumns: JVxeColumn[] = [
     {
       title: '变动类别',
       key: 'changeType',
