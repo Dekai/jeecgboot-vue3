@@ -11,23 +11,16 @@ enum Api {
   deleteBatch = '/rr.asset/asset/deleteBatch',
   importExcel = '/rr.asset/asset/importExcel',
   exportXls = '/rr.asset/asset/exportXls',
-  assetChangeList = '/rr.asset/asset/queryAssetChangeByMainId',
 }
 /**
  * 导出api
  * @param params
  */
 export const getExportUrl = Api.exportXls;
-
 /**
  * 导入api
  */
 export const getImportUrl = Api.importExcel;
-/**
- * 查询子表数据
- * @param params
- */
-export const assetChangeList = Api.assetChangeList;
 /**
  * 列表接口
  * @param params

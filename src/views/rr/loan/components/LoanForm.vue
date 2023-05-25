@@ -1,118 +1,70 @@
 <template>
-  <div>
-    <BasicForm @register="registerForm" ref="formRef"/>
-    <!-- 子表单区域 -->
-    <a-tabs v-model:activeKey="activeKey" animated  @change="handleChangeTabs">
-          <a-tab-pane tab="资产变动记录表" key="loanChange" :forceRender="true">
-            <JVxeTable
-              keep-source
-              resizable
-              ref="loanChange"
-              v-if="loanChangeTable.show"
-              :loading="loanChangeTable.loading"
-              :columns="loanChangeTable.columns"
-              :dataSource="loanChangeTable.dataSource"
-              :height="340"
-              :rowNumber="true"
-              :rowSelection="true"
-              :disabled="formDisabled"
-              :toolbar="true"
-            />
-          </a-tab-pane>
-    </a-tabs>
-
-    <div style="width: 100%;text-align: center" v-if="!formDisabled">
-      <a-button @click="handleSubmit" pre-icon="ant-design:check" type="primary">提 交</a-button>
+    <div style="min-height: 400px">
+        <BasicForm @register="registerForm"></BasicForm>
+        <div style="width: 100%;text-align: center" v-if="!formDisabled">
+            <a-button @click="submitForm" pre-icon="ant-design:check" type="primary">提 交</a-button>
+        </div>
     </div>
-  </div>
 </template>
 
 <script lang="ts">
+    import {BasicForm, useForm} from '/@/components/Form/index';
+    import {computed, defineComponent} from 'vue';
+    import {defHttp} from '/@/utils/http/axios';
+    import { propTypes } from '/@/utils/propTypes';
+    import {getBpmFormSchema} from '../Loan.data';
+    import {saveOrUpdate} from '../Loan.api';
+    
+    export default defineComponent({
+        name: "LoanForm",
+        components:{
+            BasicForm
+        },
+        props:{
+            formData: propTypes.object.def({}),
+            formBpm: propTypes.bool.def(true),
+        },
+        setup(props){
+            const [registerForm, { setFieldsValue, setProps, getFieldsValue }] = useForm({
+                labelWidth: 150,
+                schemas: getBpmFormSchema(props.formData),
+                showActionButtonGroup: false,
+                baseColProps: {span: 24}
+            });
 
-  import {BasicForm, useForm} from '/@/components/Form/index';
-  import { computed, defineComponent, reactive, ref, unref } from 'vue';
-  import {defHttp} from '/@/utils/http/axios';
-  import { propTypes } from '/@/utils/propTypes';
-  import { useJvxeMethod } from '/@/hooks/system/useJvxeMethods';
-  import { VALIDATE_FAILED } from '/@/utils/common/vxeUtils';
-  import {getBpmFormSchema,loanChangeColumns} from '../Loan.data';
-  import {saveOrUpdate,loanChangeList} from '../Loan.api';
+            const formDisabled = computed(()=>{
+                if(props.formData.disabled === false){
+                    return false;
+                }
+                return true;
+            });
 
-  export default defineComponent({
-    name: "LoanForm",
-    components:{
-      BasicForm,
-    },
-    props:{
-      formData: propTypes.object.def({}),
-      formBpm: propTypes.bool.def(true),
-    },
-    setup(props){
-      const [registerForm, { setFieldsValue, setProps }] = useForm({
-        labelWidth: 150,
-        schemas: getBpmFormSchema(props.formData),
-        showActionButtonGroup: false,
-        baseColProps: {span: 24}
-      });
+            let formData = {};
+            const queryByIdUrl = '/rr.loan/loan/queryById';
+            async function initFormData(){
+                let params = {id: props.formData.dataId};
+                const data = await defHttp.get({url: queryByIdUrl, params});
+                formData = {...data}
+                //设置表单的值
+                await setFieldsValue(formData);
+                //默认是禁用
+                await setProps({disabled: formDisabled.value})
+            }
 
-      const formDisabled = computed(()=>{
-        if(props.formData.disabled === false){
-          return false;
+            async function submitForm() {
+                let data = getFieldsValue();
+                let params = Object.assign({}, formData, data);
+                console.log('表单数据', params)
+                await saveOrUpdate(params, true)
+            }
+
+            initFormData();
+            
+            return {
+                registerForm,
+                formDisabled,
+                submitForm,
+            }
         }
-        return true;
-      });
-
-      const refKeys = ref(['loanChange', ]);
-      const activeKey = ref('loanChange');
-      const loanChange = ref();
-      const tableRefs = {loanChange, };
-      const loanChangeTable = reactive({
-        loading: false,
-        dataSource: [],
-        columns:loanChangeColumns,
-        show: false
-      })
-
-      const [handleChangeTabs,handleSubmit,requestSubTableData,formRef] = useJvxeMethod(requestAddOrEdit,classifyIntoFormData,tableRefs,activeKey,refKeys,validateSubForm);
-
-      function classifyIntoFormData(allValues) {
-        let main = Object.assign({}, allValues.formValue)
-        return {
-          ...main, // 展开
-          loanChangeList: allValues.tablesValue[0].tableData,
-        }
-      }
-
-      //表单提交事件
-      async function requestAddOrEdit(values) {
-        await saveOrUpdate(values, true);
-      }
-
-      const queryByIdUrl = '/rr.loan/loan/queryById';
-      async function initFormData(){
-        let params = {id: props.formData.dataId};
-        const data = await defHttp.get({url: queryByIdUrl, params});
-        //设置表单的值
-        await setFieldsValue({...data});
-        requestSubTableData(loanChangeList, {id: data.id}, loanChangeTable, ()=>{
-          loanChangeTable.show = true;
-        });
-        //默认是禁用
-        await setProps({disabled: formDisabled.value})
-      }
-
-      initFormData();
-
-      return {
-        registerForm,
-        formDisabled,
-        formRef,
-        handleSubmit,
-        activeKey,
-        handleChangeTabs,
-        loanChange,
-        loanChangeTable,
-      }
-    }
-  });
+    });
 </script>
