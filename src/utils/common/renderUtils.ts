@@ -155,9 +155,6 @@ const render = {
   },
 
   formatNumber: (text, record, index) => {
-    console.log(`Format number text =  ${text}`);
-    console.log("Format number record = " + JSON.stringify(record));
-    console.log("Format number index = " + index);
     const money = record.amount.toLocaleString("en-SG", {
       style: "currency",
       currency: record.currencyCode,

@@ -28,7 +28,6 @@ const loading = ref<Boolean>(false);
 const {setOptions} = useECharts(chartRef as Ref<HTMLDataElement>);
 
 const initChart = (data: ChartCategoryItem[]) => {
-  console.log("Chart Data = " + JSON.stringify(data));
   setOptions({
     tooltip: {
       trigger: 'item',
@@ -75,7 +74,6 @@ const initChart = (data: ChartCategoryItem[]) => {
 
 onMountedOrActivated(() => {
   const parameters = {type: '3m'};
-  console.log("Loading =" + loading);
   loading.value = true;
   listAssetCategories(parameters).then((res) => {
     loading.value = false;

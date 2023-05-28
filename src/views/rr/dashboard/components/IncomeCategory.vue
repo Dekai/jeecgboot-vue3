@@ -29,7 +29,6 @@ const loading = ref<Boolean>(false);
 const {setOptions} = useECharts(chartRef as Ref<HTMLDataElement>);
 const totalValue = ref<number>(0);
 const initChart = (data: ChartCategoryItem[]) => {
-  console.log("Chart Data = " + JSON.stringify(data));
   setOptions({
     tooltip: {
       trigger: 'item'
@@ -88,7 +87,6 @@ const buildChartData = (responseData: ChartCategoryItem[]) => {
 
 onMountedOrActivated(() => {
   const parameters = {type: '3m'};
-  console.log("Loading =" + loading);
   loading.value = true;
   listIncomeCategories(parameters).then((res) => {
     loading.value = false;
