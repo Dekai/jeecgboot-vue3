@@ -17,9 +17,9 @@
         <div class="aui-container">
           <div class="aui-form">
             <div class="aui-image">
-              <div class="aui-image-text">
-                <img :src="adTextImg" />
-              </div>
+<!--              <div class="aui-image-text">-->
+<!--                <img :src="adTextImg" />-->
+<!--              </div>-->
             </div>
             <div class="aui-formBox">
               <div class="aui-formWell">
@@ -188,8 +188,8 @@
   //账号登录表单字段
   const formData = reactive<any>({
     inputCode: '',
-    username: 'admin',
-    password: '123456',
+    username: '',
+    password: '',
   });
   //手机登录表单字段
   const phoneFormData = reactive<any>({

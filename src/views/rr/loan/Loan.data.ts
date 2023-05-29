@@ -5,7 +5,15 @@ import { render } from '/@/utils/common/renderUtils';
 import {JVxeTypes,JVxeColumn} from '/@/components/jeecg/JVxeTable/types'
 //列表数据
 export const columns: BasicColumn[] = [
-   {
+  {
+    title: '创建日期',
+    key: 'createTime',
+    type: JVxeTypes.date,
+    width:"200px",
+    placeholder: '请输入${title}',
+    defaultValue:'',
+  },
+  {
     title: '负债名称',
     align:"center",
     dataIndex: 'name'

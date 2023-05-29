@@ -57,7 +57,7 @@ const initChart = (data: ChartCategoryItem[]) => {
     yAxis: [
       {
         type: 'value',
-        max: 80000,
+        max: 12000,
         splitNumber: 4,
         axisTick: {
           show: false,

@@ -171,6 +171,14 @@ export const formSchema: FormSchema[] = [
 //子表表格配置
 export const incomeChangeColumns: JVxeColumn[] = [
   {
+    title: '创建日期',
+    key: 'createTime',
+    type: JVxeTypes.date,
+    width:"200px",
+    placeholder: '请输入${title}',
+    defaultValue:'',
+  },
+  {
     title: '变动类别',
     key: 'changeType',
     type: JVxeTypes.select,

@@ -2,44 +2,80 @@
   <div ref="chartRef" :style="{ height, width }"></div>
 </template>
 <script lang="ts" setup>
-  import { onMounted, ref, Ref } from 'vue';
-  import { useECharts } from '/@/hooks/web/useECharts';
-  import { basicProps } from './props';
+import {ref, Ref} from 'vue';
+import {useECharts} from '/@/hooks/web/useECharts';
+import {basicProps} from './props';
+import {listMonthExpenseBar} from "/@/views/rr/dashboard/dashboard.api";
+import {onMountedOrActivated} from "/@/hooks/core/onMountedOrActivated";
+import {ChartCategoryItem} from "/@/views/rr/dashboard/type";
 
-  defineProps({
-    ...basicProps,
-  });
+defineProps({
+  ...basicProps,
+});
 
-  const chartRef = ref<HTMLDivElement | null>(null);
-  const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);
-  onMounted(() => {
-    setOptions({
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          lineStyle: {
-            width: 1,
-            color: '#019680',
-          },
-        },
-      },
-      grid: { left: '1%', right: '1%', top: '2  %', bottom: 0, containLabel: true },
-      xAxis: {
+const chartRef = ref<HTMLDivElement | null>(null);
+const {setOptions} = useECharts(chartRef as Ref<HTMLDivElement>);
+
+const initChart = (data: ChartCategoryItem[]) => {
+  setOptions({
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow'
+      }
+    },
+    legend: {},
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    xAxis: [
+      {
         type: 'category',
-        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-      },
-      yAxis: {
-        type: 'value',
-        max: 8000,
-        splitNumber: 4,
-      },
-      series: [
-        {
-          data: [3000, 2000, 3333, 5000, 3200, 4200, 3200, 2100, 3000, 5100, 6000, 3200, 4800],
-          type: 'bar',
-          barMaxWidth: 80,
-        },
-      ],
-    });
+        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value'
+      }
+    ],
+    series: data
   });
+};
+
+const buildChartData = (responseData: Map<string, number[]>) => {
+  const dataArray = [];
+  console.log("responseData" + JSON.stringify(responseData));
+  for (const key in responseData) {
+    if (responseData.hasOwnProperty(key)) {
+      const dataItem = {
+        name: key,
+        type: 'bar',
+        stack: 'Expense',
+        emphasis: {
+          focus: 'series'
+        },
+        data: responseData[key]
+      };
+      dataArray.push(dataItem);
+    }
+  }
+  console.log("dataArray" + dataArray);
+  return dataArray;
+};
+
+onMountedOrActivated(() => {
+  const parameters = {type: '3m'};
+  listMonthExpenseBar(parameters).then((res) => {
+    if (res) {
+      const dataArray = buildChartData(res);
+      initChart(dataArray);
+    } else {
+      console.error('listMonthExpenseBar error: : ' + res);
+    }
+  });
+})
 </script>
